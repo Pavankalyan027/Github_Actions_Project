@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   compile:
-    runs-on: ubuntu-latest
+    runs-on: Private_Runner
 
     steps:
       - name: Checkout Code
@@ -21,7 +21,7 @@ jobs:
         run: mvn -B compile
 
   security-check:
-    runs-on: ubuntu-latest
+    runs-on: Private_Runner
     needs: compile
 
     steps:
