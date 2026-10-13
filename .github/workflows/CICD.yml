@@ -37,7 +37,7 @@ jobs:
 
       - name: Resolve Maven Dependencies
         run: mvn -B dependency:go-offline
-        
+
       - name: Trivy FS Scan
         run: trivy fs --format json --output fs-report.json .
 
@@ -49,8 +49,6 @@ jobs:
           path: fs-report.json
           if-no-files-found: ignore
 
-      
-
       - name: Gitleaks Code Scan
         run: gitleaks detect --source . --report-format json --report-path gitleaks-report.json
 
@@ -61,9 +59,10 @@ jobs:
           name: gitleaks-report
           path: gitleaks-report.json
           if-no-files-found: ignore
-          
- test:
+
+  test:
     runs-on: Private_Runner
+    needs: security-check
 
     steps:
       - name: Checkout Code
@@ -76,5 +75,5 @@ jobs:
           distribution: temurin
           cache: maven
 
-      - name: Build with Maven
-        run: mvn test
+      - name: Run Maven Tests
+        run: mvn -B test
