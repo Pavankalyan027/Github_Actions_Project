@@ -51,8 +51,8 @@ jobs:
 
       - name: Install Gitleaks
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gitleaks
+          sudo dnf update -y
+          sudo dnf install -y gitleaks
 
       - name: Gitleaks Code Scan
         run: gitleaks detect --source . --report-format json --report-path gitleaks-report.json
