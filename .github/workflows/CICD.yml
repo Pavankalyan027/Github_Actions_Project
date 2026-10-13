@@ -77,3 +77,15 @@ jobs:
 
       - name: Run Maven Tests
         run: mvn -B test
+        
+  sonarqube:
+    runs-on: Private_Runner
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        # Disabling shallow clones is recommended for improving the relevancy of reporting
+        fetch-depth: 0
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v8.3.0
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
