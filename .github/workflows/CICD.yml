@@ -80,6 +80,7 @@ jobs:
         
   sonarqube:
     runs-on: Private_Runner
+    needs: test
     steps:
     - uses: actions/checkout@v6
       with:
