@@ -37,7 +37,7 @@ jobs:
 
       - name: Resolve Maven Dependencies
         run: mvn -B dependency:go-offline
-
+        
       - name: Trivy FS Scan
         run: trivy fs --format json --output fs-report.json .
 
@@ -49,38 +49,11 @@ jobs:
           path: fs-report.json
           if-no-files-found: ignore
 
-      - name: Install Gitleaks
-        run: |
-          sudo dnf install -y curl tar gzip
+      
 
-          ARCH=$(uname -m)
-          case "$ARCH" in
-            x86_64) GITLEAKS_ARCH="x64" ;;
-            aarch64) GITLEAKS_ARCH="arm64" ;;
-            *)
-              echo "Unsupported architecture: $ARCH"
-              exit 1
-              ;;
-          esac
-
-          VERSION=$(curl -fsSL https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
-            | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"].lstrip("v"))')
-
-          curl -fL \
-            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_${GITLEAKS_ARCH}.tar.gz" \
-            -o /tmp/gitleaks.tar.gz
-
-          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
-          sudo install /tmp/gitleaks /usr/local/bin/gitleaks
-
-          gitleaks version
 
       - name: Gitleaks Code Scan
-        run: |
-          gitleaks detect \
-            --source . \
-            --report-format json \
-            --report-path gitleaks-report.json
+        run: gitleaks detect --source . --report-format json --report-path gitleaks-report.json
 
       - name: Upload Gitleaks Report
         if: always()
